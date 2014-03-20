@@ -22,32 +22,60 @@ exports.initialize = function(pathsObj){
   });
 };
 
-// The following function names are provided to you to suggest how you might
-// modularize your code. Keep it clean!
 
-
-exports.readListOfUrls = function(){
-  var sites = fs.readFileSync(exports.paths.list, 'utf8').split('\n');
-  sites.pop();
-  return sites;
-
-};
-
-exports.isUrlInList = function(postUrl, urlArray){
-  for (var i = 0; i < urlArray.length; i++) {
-    if (postUrl === urlArray[i]) {
-      return true;
+exports.readListOfUrls = function(postUrl){
+  fs.readFile(exports.paths.list, function(err, data) {
+    var sites = data.toString().split('\n');
+    sites.pop();
+    var sitesObj = {};
+    for (var i=0; i<sites.length; i++) {
+      sitesObj[sites[i]] = true;
     }
-  }
-  return false;
+    exports.isUrlInList(postUrl, sitesObj);
+  });
 };
+
+exports.isUrlInList = function(postUrl, sitesObj){
+  if (sitesObj[postUrl]) {
+    exports.isURLArchived(postUrl);
+  } else {
+    exports.addUrlToList(postUrl);
+  }
+  // for (var i = 0; i < urlArray.length; i++) {
+  //   if (postUrl === urlArray[i]) {
+  //     exports.isURLArchived(postUrl);
+  //     return;
+  //   } else {
+  //     exports.addUrlToList(postUrl);
+  //   }
+  // }
+};
+
 
 exports.addUrlToList = function(postUrl){
-  // write url to sites.txt
+  buffer = new Buffer(postUrl + '\n');
+  fs.appendFile(exports.paths.list, buffer, function() {
+    console.log('entered callback for fs.appendfile');
+    exports.isURLArchived(postUrl);
+  });
 };
 
-exports.isURLArchived = function(){
+exports.isURLArchived = function(postUrl){
+  var fileName = exports.paths.archivedSites + '/' + postUrl;
+  fs.readFile(fileName, function(err, data) {
+    if (err) {
+      console.log('url not found in archived sites');
+      exports.downloadUrls(postUrl);
+    } else {
+      console.log('congrats, url found!!!');
+      exports.serveArchivedURL(postUrl);
+    }
+  });
 };
 
-exports.downloadUrls = function(){
+exports.serveArchivedURL = function(postUrl){
+
+};
+
+exports.downloadUrls = function(postUrl){
 };
