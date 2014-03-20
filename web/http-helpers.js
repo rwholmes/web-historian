@@ -18,3 +18,16 @@ exports.headers = {
 
 // As you progress, keep thinking about what helper functions you can put here!
 
+exports.collectData = function(req, callback) {
+  var postData = '';
+  req.on('data', function(data) {
+    postData += data;
+  });
+  req.on('end', function() {
+    callback(postData);
+  });
+};
+
+
+
+// var fileName = path.join(archive.paths.siteAssets, './loading.html');

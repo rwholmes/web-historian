@@ -1,4 +1,2 @@
 www.google.com
-www.a.com
-
-www.abc.com
+www.hackreactor.com

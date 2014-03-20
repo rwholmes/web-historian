@@ -24,31 +24,22 @@ exports.initialize = function(pathsObj){
 
 
 exports.readListOfUrls = function(postUrl){
+};
+
+exports.isUrlInList = function(postUrl, callback){
   fs.readFile(exports.paths.list, function(err, data) {
+    var found = false;
     var sites = data.toString().split('\n');
     sites.pop();
     var sitesObj = {};
     for (var i=0; i<sites.length; i++) {
       sitesObj[sites[i]] = true;
     }
-    exports.isUrlInList(postUrl, sitesObj);
+    if (sitesObj[postUrl]) {
+      found = true;
+    }
+    callback(found);
   });
-};
-
-exports.isUrlInList = function(postUrl, sitesObj){
-  if (sitesObj[postUrl]) {
-    exports.isURLArchived(postUrl);
-  } else {
-    exports.addUrlToList(postUrl);
-  }
-  // for (var i = 0; i < urlArray.length; i++) {
-  //   if (postUrl === urlArray[i]) {
-  //     exports.isURLArchived(postUrl);
-  //     return;
-  //   } else {
-  //     exports.addUrlToList(postUrl);
-  //   }
-  // }
 };
 
 
@@ -60,22 +51,40 @@ exports.addUrlToList = function(postUrl){
   });
 };
 
-exports.isURLArchived = function(postUrl){
+exports.isURLArchived = function(postUrl, callback){
+  var exists = null;
   var fileName = exports.paths.archivedSites + '/' + postUrl;
-  fs.readFile(fileName, function(err, data) {
+  // existence check for file, changing from fs.readFile to fs.exists
+  fs.exists(fileName, function(err) {
     if (err) {
-      console.log('url not found in archived sites');
-      exports.downloadUrls(postUrl);
+      console.log('sorry, archived file not found');
+      exists = false;
     } else {
-      console.log('congrats, url found!!!');
-      exports.serveArchivedURL(postUrl);
+      console.log('congrats, archived file found!!!');
+      exists = true;
     }
   });
+  callback(exists);
 };
 
-exports.serveArchivedURL = function(postUrl){
+exports.serveArchivedURL = function(fileName){
+  fs.readFile(fileName, function(err, data) {
+    res.writeHead(200, httpHelpers.headers);
+    res.end(data + '');
+  });
 
 };
 
 exports.downloadUrls = function(postUrl){
 };
+
+
+
+
+
+
+
+
+
+
+
