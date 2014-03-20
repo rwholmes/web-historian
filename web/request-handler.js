@@ -4,7 +4,8 @@ var archive = require('../helpers/archive-helpers');
 var util = require('util');
 var webroot = './public';
 var httpHelpers = require('./http-helpers.js');
-
+var querystring = require('querystring');
+var http = require('http');
 
 var getIndex = function(req, res) {
   console.log('++++++++req.url++++++++');
@@ -17,18 +18,39 @@ var getIndex = function(req, res) {
 
 };
 
+// ss: modified to use .on
 var postIndex = function(req, res) {
-  console.log('post attempted, functionality to be added later');
-  // Grab array of sites in sites.txt
   var sites = archive.readListOfUrls();
-  var booVal = archive.isUrlInList(req.url, sites);
-  if(sites[0] === 'www.google.com') {
-    console.log('trueeeeeeeeeee');
-  }
-  console.log('----sites[0]');
-  console.log(sites[0]);
+  var postData = '';
+  var postUrl;
+  req.on('data', function(data) {
+    postData += data;
+  });
+  req.on('end', function() {
+    var postUrl = querystring.parse(postData)['url'];
+    console.log('----POSTURL----');
+    console.log(postUrl);
+    if (archive.isUrlInList(postUrl, sites)) {
+      console.log('PLACEHOLDER -- serve up archived site');
+      // serve up archived site
+    } else {
+      console.log('PLACEHOLDER -- add url to list');
+      // add url to list
+      // archive.addUrlToList(postUrl);
+    }
+  });
 
-  // Check if url is in sites array
+  // old code ///////////////
+  // // Grab array of sites in sites.txt
+  // var sites = archive.readListOfUrls();
+  // var booVal = archive.isUrlInList(req.url, sites);
+  // if(sites[0] === 'www.google.com') {
+  //   console.log('trueeeeeeeeeee');
+  // }
+  // console.log('----sites[0]');
+  // console.log(sites[0]);
+
+  // // Check if url is in sites array
 
 };
 

@@ -1,5 +1,5 @@
 var http = require("http");
-var staticHandler = require("./static-handler");
+var rh = require("./request-handler");
 var util = require('util');
 var url = require('url');
 var httpHelpers = require('./http-helpers.js');
@@ -10,7 +10,7 @@ var ip = "127.0.0.1";
 
 var requestHandler = function(request, response) {
   console.log('serving request type ' + request.method + ' for url ' + request.url);
-  staticHandler.handleRequest(request, response);
+  rh.handleRequest(request, response);
 };
 
 

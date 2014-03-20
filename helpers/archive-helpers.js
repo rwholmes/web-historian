@@ -25,12 +25,6 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-// exports.initiateHelpers = function(someUrl){
-//   var array = exports.readListOfUrls();
-//   console.log(array);
-//   console.log(someUrl);
-//   console.log(exports.isUrlInList(someUrl, array));
-// };
 
 exports.readListOfUrls = function(){
   var sites = fs.readFileSync(exports.paths.list, 'utf8').split('\n');
@@ -39,16 +33,17 @@ exports.readListOfUrls = function(){
 
 };
 
-exports.isUrlInList = function(someUrl, urlArray){
-  for (var i=0; i<urlArray.length; i++) {
-    if (someUrl === urlArray[i]) {
+exports.isUrlInList = function(postUrl, urlArray){
+  for (var i = 0; i < urlArray.length; i++) {
+    if (postUrl === urlArray[i]) {
       return true;
     }
   }
   return false;
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(postUrl){
+  // write url to sites.txt
 };
 
 exports.isURLArchived = function(){
