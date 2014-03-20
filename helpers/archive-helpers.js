@@ -9,7 +9,7 @@ var _ = require('underscore');
  * customize it in any way you wish.
  */
 
-exports.paths = {
+exports.paths = paths = {
   'siteAssets' : path.join(__dirname, '../web/public'),
   'archivedSites' : path.join(__dirname, '../archives/sites'),
   'list' : path.join(__dirname, '../archives/sites.txt')
@@ -25,10 +25,27 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
+// exports.initiateHelpers = function(someUrl){
+//   var array = exports.readListOfUrls();
+//   console.log(array);
+//   console.log(someUrl);
+//   console.log(exports.isUrlInList(someUrl, array));
+// };
+
 exports.readListOfUrls = function(){
+  var sites = fs.readFileSync(exports.paths.list, 'utf8').split('\n');
+  sites.pop();
+  return sites;
+
 };
 
-exports.isUrlInList = function(){
+exports.isUrlInList = function(someUrl, urlArray){
+  for (var i=0; i<urlArray.length; i++) {
+    if (someUrl === urlArray[i]) {
+      return true;
+    }
+  }
+  return false;
 };
 
 exports.addUrlToList = function(){
