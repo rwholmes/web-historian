@@ -16,9 +16,16 @@ var http = require('http');
 
 // figure out how to grab url, then join it to archive.paths.siteAssets
 var getIndex = function(req, res) {
-  console.log('-------req.url');
-  console.log(req.url);
   var fileName = path.join(archive.paths.siteAssets, './index.html');
+  console.log('********req.url.charAt[1]');
+  console.log(req.url.charAt(1));
+  if (req.url === '/loading.html') {
+    fileName = path.join(archive.paths.siteAssets, './loading.html');
+  } else if (req.url.charAt(1) === 'w') {
+    console.log('-------looking for archive website');
+    console.log(path.join(archive.paths.archivedSites, req.url));
+    fileName = path.join(archive.paths.archivedSites, req.url);
+  }
   httpHelpers.servePage(res, fileName, httpHelpers.headers);
 };
 
@@ -32,10 +39,10 @@ var postIndex = function(req, res) {
         // if yes, check if its archived
         archive.isURLArchived(postUrl, function(exists) {
           if (exists) {
-            // INCOMPLETE -- if archived, serve it
+            // if archived, serve it
             httpHelpers.sendRedirect(res, '/' + postUrl);
           } else {
-            // INCOMPLETE -- if not archived, show loading
+            // if not archived, show loading
             httpHelpers.sendRedirect(res, '/loading.html');
           }
 
@@ -43,7 +50,7 @@ var postIndex = function(req, res) {
       } else {
         // if no, add to the list and show load page
         archive.addUrlToList(postUrl, function() {});
-        httpHelpers.sendRedirect(res, '/public/loading.html');
+        httpHelpers.sendRedirect(res, '/loading.html');
       }
 
     });
