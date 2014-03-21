@@ -7,14 +7,6 @@ var httpHelpers = require('./http-helpers.js');
 var querystring = require('querystring');
 var http = require('http');
 
-// var httpHelpers.servePage = function(req, res, fileName) {
-//   fs.readFile(fileName, function(err, data) {
-//     res.writeHead(200, httpHelpers.headers);
-//     res.end(data + '');
-//   });
-// };
-
-// figure out how to grab url, then join it to archive.paths.siteAssets
 var getIndex = function(req, res) {
   var fileName = path.join(archive.paths.siteAssets, './index.html');
   if (req.url === '/loading.html') {

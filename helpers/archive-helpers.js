@@ -2,13 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 
-/*
- * You will need to reuse the same paths many times over in the course of this sprint.
- * Consider using the `paths` object below to store frequently used file paths. This way,
- * if you move any files, you'll only need to change your code in one place! Feel free to
- * customize it in any way you wish.
- */
-
 exports.paths = paths = {
   'siteAssets' : path.join(__dirname, '../web/public'),
   'archivedSites' : path.join(__dirname, '../archives/sites'),
@@ -20,10 +13,6 @@ exports.initialize = function(pathsObj){
   _.each(pathsObj, function(path, type) {
     exports.paths[type] = path;
   });
-};
-
-
-exports.readListOfUrls = function(postUrl){
 };
 
 exports.isUrlInList = function(postUrl, callback){
@@ -41,7 +30,6 @@ exports.isUrlInList = function(postUrl, callback){
     callback(found);
   });
 };
-
 
 exports.addUrlToList = function(postUrl, callback){
   buffer = new Buffer(postUrl + '\n');
@@ -62,19 +50,4 @@ exports.serveArchivedURL = function(fileName){
     res.writeHead(200, httpHelpers.headers);
     res.end(data + '');
   });
-
 };
-
-// exports.downloadUrls = function(postUrl){
-// };
-
-
-
-
-
-
-
-
-
-
-
