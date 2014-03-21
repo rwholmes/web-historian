@@ -65,8 +65,8 @@ exports.serveArchivedURL = function(fileName){
 
 };
 
-exports.downloadUrls = function(postUrl){
-};
+// exports.downloadUrls = function(postUrl){
+// };
 
 
 

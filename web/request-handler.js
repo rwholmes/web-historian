@@ -17,12 +17,9 @@ var http = require('http');
 // figure out how to grab url, then join it to archive.paths.siteAssets
 var getIndex = function(req, res) {
   var fileName = path.join(archive.paths.siteAssets, './index.html');
-  console.log('********req.url.charAt[1]');
-  console.log(req.url.charAt(1));
   if (req.url === '/loading.html') {
     fileName = path.join(archive.paths.siteAssets, './loading.html');
   } else if (req.url.charAt(1) === 'w') {
-    console.log('-------looking for archive website');
     console.log(path.join(archive.paths.archivedSites, req.url));
     fileName = path.join(archive.paths.archivedSites, req.url);
   }
