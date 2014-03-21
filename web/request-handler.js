@@ -7,22 +7,19 @@ var httpHelpers = require('./http-helpers.js');
 var querystring = require('querystring');
 var http = require('http');
 
-var servePage = function(req, res, fileName) {
-  fs.readFile(fileName, function(err, data) {
-    res.writeHead(200, httpHelpers.headers);
-    res.end(data + '');
-  });
-};
+// var httpHelpers.servePage = function(req, res, fileName) {
+//   fs.readFile(fileName, function(err, data) {
+//     res.writeHead(200, httpHelpers.headers);
+//     res.end(data + '');
+//   });
+// };
 
+// figure out how to grab url, then join it to archive.paths.siteAssets
 var getIndex = function(req, res) {
+  console.log('-------req.url');
+  console.log(req.url);
   var fileName = path.join(archive.paths.siteAssets, './index.html');
-  servePage(req, res, fileName);
-
-  // fs.readFile(path.join(archive.paths.siteAssets, './index.html'), function(err, data) {
-  //   res.writeHead(200, httpHelpers.headers);
-  //   res.end(data + '');
-  // });
-
+  httpHelpers.servePage(res, fileName, httpHelpers.headers);
 };
 
 var postIndex = function(req, res) {
@@ -35,35 +32,24 @@ var postIndex = function(req, res) {
         // if yes, check if its archived
         archive.isURLArchived(postUrl, function(exists) {
           if (exists) {
-            // if archived, serve it
+            // INCOMPLETE -- if archived, serve it
+            httpHelpers.sendRedirect(res, '/' + postUrl);
           } else {
-            // if not archived, show loading
+            // INCOMPLETE -- if not archived, show loading
+            httpHelpers.sendRedirect(res, '/loading.html');
           }
 
         });
       } else {
-        // if no, add to the list
-          // add to list
-          // show loading
+        // if no, add to the list and show load page
+        archive.addUrlToList(postUrl, function() {});
+        httpHelpers.sendRedirect(res, '/public/loading.html');
       }
 
     });
 
   });
 };
-
-// var postIndex = function(req, res) {
-//   var postData = '';
-//   var fileName = path.join(archive.paths.siteAssets, './loading.html');
-//   req.on('data', function(data) {
-//     postData += data;
-//   });
-//   req.on('end', function() {
-//     var postUrl = querystring.parse(postData)['url'];
-//     archive.readListOfUrls(postUrl);
-//     servePage(req, res, fileName);
-//   });
-// };
 
 var options = function(req, res){
   res.writeHead(200, httpHelpers.headers);

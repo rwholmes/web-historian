@@ -43,28 +43,18 @@ exports.isUrlInList = function(postUrl, callback){
 };
 
 
-exports.addUrlToList = function(postUrl){
+exports.addUrlToList = function(postUrl, callback){
   buffer = new Buffer(postUrl + '\n');
   fs.appendFile(exports.paths.list, buffer, function() {
     console.log('entered callback for fs.appendfile');
-    exports.isURLArchived(postUrl);
   });
 };
 
 exports.isURLArchived = function(postUrl, callback){
-  var exists = null;
   var fileName = exports.paths.archivedSites + '/' + postUrl;
-  // existence check for file, changing from fs.readFile to fs.exists
-  fs.exists(fileName, function(err) {
-    if (err) {
-      console.log('sorry, archived file not found');
-      exists = false;
-    } else {
-      console.log('congrats, archived file found!!!');
-      exists = true;
-    }
+  fs.exists(fileName, function(bool) {
+    callback(bool);
   });
-  callback(exists);
 };
 
 exports.serveArchivedURL = function(fileName){
